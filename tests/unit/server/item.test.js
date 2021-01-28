@@ -2,7 +2,8 @@ const expect = require('expect');
 const app = require('../../../server')
 const Item = require('../../../server/module/items')
 const request = require('supertest')
-const {seedItems,populateItems} = require("./seedItems")
+const {seedItems,populateItems} = require("./seedItems");
+const {ObjectID} = require("mongodb")
 
 // const add = (x,y) => x + y;
 
@@ -28,8 +29,17 @@ describe("POST /items", ()=>{
     expect(res.body.item.title).toBe(body.title);
    const items = await Item.find()
    expect(items.length).toBe(seedItems.length + 1);
-   expect(items[seedItems.length].title).toBe("test title")
+   expect(items[seedItems.length].title).toBe(body.title)
 
+    });
+
+    it("should not create a new item with invalid data", async ()=>{
+        await request(app)
+        .post('/api/items')
+        .send({})
+        .expect(400);
+        const item = await Item.find();
+        expect(item.length).toBe(seedItems.length);
     })
 })
 
@@ -40,4 +50,26 @@ describe("GET /items", ()=>{
         .expect(200)
         expect(res.body.items.length).toBe(seedItems.length)
     })
+})
+
+describe("Get /items/:id",()=>{
+    it("should get single item", async ()=>{
+        const res = await request(app)
+        .get(`/api/items/${seedItems[0]._id.toHexString()}`)
+        .expect(200)
+        expect(res.body.item.title).toBe(seedItems[0].title)
+    });
+
+    it("should return 404 if item not found", async()=>{
+        await request(app)
+        .get(`/api/items/${new ObjectID().toHexString()}`)
+        .expect(404)
+    });
+
+    it("should return 404 for invalid Id", async ()=>{
+        await request(app)
+        .get("/api/items/123")
+        .expect(404)
+    })
+
 })

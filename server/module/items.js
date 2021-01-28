@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const itemSchema = new Schema({
     title:{
-        type: String
+        type: String,
+        required:true
     },
     artist:{
         type:String

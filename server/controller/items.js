@@ -21,7 +21,7 @@ exports.getSingleItem = async(req,res)=>{
        }
        res.status(200).json({item})
    } catch (error) {
-    res.status(400).json({message:"No Item found"})
+    res.status(404).json({message:"No Item found"})
    }
 }
 

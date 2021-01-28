@@ -1,11 +1,14 @@
 const Item = require("../../../server/module/items")
+const {ObjectID} = require("mongodb")
 
 const seedItems = [
     {
-        title:"Test item 1"
+        title:"Test item 1",
+        _id: new ObjectID()
     },
     {
-        title:"Test item 2"
+        title:"Test item 2",
+        _id: new ObjectID
     },
 
 ]
