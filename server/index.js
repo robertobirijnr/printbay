@@ -13,6 +13,7 @@ mongoose.connect(config.DB_URI_LOCAL, { useNewUrlParser: true ,useUnifiedTopolog
   app.use(bodyParser.json());
 
 app.use('/api/items',require('./routes/items'));
+app.use('/api/users',require('./routes/user'));
 
 const port = 8070;
 if(process.env.NODE_ENV !== "test"){
