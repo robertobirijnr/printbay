@@ -1,7 +1,12 @@
 const Item = require('../module/items')
 
-exports.getAllItems = (req,res)=>{
-    res.send("It works");
+exports.getAllItems = async(req,res)=>{
+    try {
+        const items = await Item.find()
+        res.status(200).json({items})
+    } catch (err) {
+        res.status(400).json({message:"No Item found"})
+    }
 }
 
 exports.createItem = async (req,res) =>{

@@ -5,7 +5,7 @@ const config = require('./config/db')
 const bodyParser = require('body-parser')
 
 //Database connection
-mongoose.connect(config.DB_URI_LOCAL, { useNewUrlParser: true })
+mongoose.connect(config.DB_URI_LOCAL, { useNewUrlParser: true ,useUnifiedTopology: true})
   .then(() => console.log('DB Connected!'))
   .catch(err => console.log(err));
 
@@ -15,8 +15,11 @@ mongoose.connect(config.DB_URI_LOCAL, { useNewUrlParser: true })
 app.use('/api/items',require('./routes/items'));
 
 const port = 8070;
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+if(process.env.NODE_ENV !== "test"){
+  app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
+  });
+}
+
 
 module.exports = app;
