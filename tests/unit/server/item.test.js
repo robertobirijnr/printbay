@@ -2,6 +2,7 @@ const expect = require('expect');
 const app = require('../../../server')
 const Item = require('../../../server/module/items')
 const request = require('supertest')
+const {seedItems,populateItems} = require("./seedItems")
 
 // const add = (x,y) => x + y;
 
@@ -14,7 +15,7 @@ const request = require('supertest')
    
 // })
 
-beforeEach(async()=> Item.deleteMany());
+beforeEach(populateItems);
 
 
 describe("POST /items", ()=>{
@@ -26,8 +27,17 @@ describe("POST /items", ()=>{
         .expect(200);
     expect(res.body.item.title).toBe(body.title);
    const items = await Item.find()
-   expect(items.length).toBe(1);
-   expect(items[0].title).toBe("test title")
+   expect(items.length).toBe(seedItems.length + 1);
+   expect(items[seedItems.length].title).toBe("test title")
 
+    })
+})
+
+describe("GET /items", ()=>{
+    it("should get all items", async ()=>{
+        const res = await request(app)
+        .get('/api/items')
+        .expect(200)
+        expect(res.body.items.length).toBe(seedItems.length)
     })
 })

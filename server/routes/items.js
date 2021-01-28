@@ -8,5 +8,8 @@ router
     .get(itemController.getAllItems)
     .post(itemController.createItem)
 
+router
+    .route('/:id')    
+    .get(itemController.getSingleItem)
 
 module.exports = router;    
