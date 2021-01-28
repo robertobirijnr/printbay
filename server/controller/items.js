@@ -26,7 +26,10 @@ exports.getSingleItem = async(req,res)=>{
 }
 
 exports.createItem = async (req,res) =>{
-    const item = new Item(req.body);
+    const {title,artist, image,year,Price} = req.body
+    const item = new Item(
+        {title,artist, image,year,Price}
+        );
     try {
         const doc = await item.save()
         res.status(200).json({item:doc})
