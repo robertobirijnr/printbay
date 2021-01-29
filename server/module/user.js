@@ -49,4 +49,13 @@ userSchema.methods.generateAuthToken = async function(){
     return token;
 }
 
+userSchema.statics.findByToken = async function(token){
+    try {
+        const {_id} = jwt.verify(token,config.JWT_SECRETE);
+        return this.findOne({_id,token});
+    } catch (err) {
+        throw err
+    }
+}
+
 module.exports = mongoose.model('user',userSchema)
