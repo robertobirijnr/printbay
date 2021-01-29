@@ -48,6 +48,10 @@ const populateUsers = async ()=>{
     // await user.insertMany(seedUser)
     await new user(seedUser[0]).save();
     await new user(seedUser[1]).save();
+
+    // await this.seedUser.forEach(async user =>{
+    //     await (new user(seedUser).save(()=>{}))
+    // })
     
 }
 

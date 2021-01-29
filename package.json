@@ -10,7 +10,8 @@
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit",
     "test:unit:client": "vue-cli-service test:unit",
-    "test:unit:server": "NODE_ENV=test mocha tests/unit/server --exit"
+    "test:unit:server": "NODE_ENV=test mocha tests/unit/server --exit",
+    "seed":"node ./public/scripts/run_seed"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
