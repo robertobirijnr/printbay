@@ -13,7 +13,7 @@ before(populateUsers)
 describe("GET /users",()=>{
     it("should return userProfile if authenticated", async ()=>{
         const res = await request(app)
-        .get("/api/users")
+        .get("/api/users/user-profile")
         .set("authorization",`Bearer ${seedUser[0].token}`)
         .expect(200);
         expect(res.body.user._id).toBe(seedUser[0]._id.toHexString());
@@ -21,7 +21,7 @@ describe("GET /users",()=>{
 
     it("should return 401 if not authenticated", async ()=>{
         const res = await request(app)
-        .get("/api/users")
+        .get("/api/users/user-profile")
         .expect(401);
         expect(res.body.user).toBeUndefined();
     })
@@ -35,7 +35,7 @@ describe("POST /users",()=>{
         password: faker.internet.password(),
         }
         const res = await request(app)
-        .post('/api/users')
+        .post('/api/users/register')
         .send(user)
         .expect(200)
         expect(res.header.authorization).toBeDefined()
@@ -47,7 +47,7 @@ describe("POST /users",()=>{
 
     it("should not register user with invalid data", async ()=>{
         await request(app)
-        .post("/api/users")
+        .post("/api/users/register")
         .send({})
         .expect(400)
         const user = await User.find()
@@ -56,7 +56,7 @@ describe("POST /users",()=>{
 
     it("should not register new user if email already exist", async ()=>{
         await request(app)
-        .post("/api/users")
+        .post("/api/users/register")
         .send(seedUser[0])
         .expect(400)
         const users = await User.find();

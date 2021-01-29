@@ -31,15 +31,21 @@ const userSchema = new Schema({
     },
     token:{
         type:String
+    },
+    role:{
+        type:String,
+        enum:['admin','user'],
+        default:"user"
     }
 },{
     toJSON:{
-        transform:(doc, {_id,name,email}) =>({
-            _id,name,email
+        transform:(doc, {_id,name,email,role}) =>({
+            _id,name,email,role
         })
     }
 });
 
+//Generating user token for authentication
 userSchema.methods.generateAuthToken = async function(){
     if(this.token){
         return this.token
@@ -53,6 +59,7 @@ userSchema.methods.generateAuthToken = async function(){
     return token;
 }
 
+
 userSchema.statics.findByToken = async function(token){
     try {
         const {_id} = jwt.verify(token,config.JWT_SECRETE);
@@ -62,6 +69,7 @@ userSchema.statics.findByToken = async function(token){
     }
 }
 
+//Hashing user password
 userSchema.pre("save", async function(next){
     if(this.isModified("password")){
         try {
@@ -75,6 +83,7 @@ userSchema.pre("save", async function(next){
     }
 })
 
+//Validating user
 userSchema.statics.findByCredentials = async function(email,password){
     const user = await this.findOne({email})
     if(!user){
@@ -99,5 +108,19 @@ userSchema.statics.findByCredentials = async function(email,password){
        }
     }
 }
+
+//Adding user role 
+userSchema.pre('save',async function(next){
+    if(this.isModified('role') && this.role === 'admin'){
+      const user = await this.constructor.find({role:'admin'});
+      if(user.length >= 1){
+          next(new Error("Only one admin user can be add"))
+      }else{
+          next()
+      }
+    }else{
+        next()
+    }
+})
 
 module.exports = mongoose.model('user',userSchema)
