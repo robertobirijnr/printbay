@@ -15,18 +15,4 @@ exports.registerUser = async(req,res)=>{
     }
 }
 
-exports.userProfile = async(req,res)=>{
-    let token;
-    try {
-        token = req.header("authorization").split(" ")[1]
-    } catch (err) {
-      return res.status(401).send({message:"Authorization token invalid"})
-    }
-
-    try {
-       const user = await User.findByToken(token)
-       res.send({user})
-    } catch (err) {
-        res.status(401).send(err)
-    }
-}
+exports.userProfile = async(req,res)=>res.send({user: req.user})
