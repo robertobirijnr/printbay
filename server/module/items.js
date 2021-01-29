@@ -10,13 +10,20 @@ const itemSchema = new Schema({
         type:String
     },
     image:{
-        type:String
+        data: Buffer,
+        contentType: String
     },
     year:{
         type:Number
     },
-    Price:{
-        Number
+    price:{
+        type:Number
+    }
+},{
+    toJSON:{
+        transform:(doc, {_id,title,image,year,price,artist}) =>({
+           id: _id,title,image,year,price,artist
+        })
     }
 })
 

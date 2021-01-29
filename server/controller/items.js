@@ -37,3 +37,34 @@ exports.createItem = async (req,res) =>{
         res.status(400).json({message:"Failed"})
     }
 }
+
+
+exports.updateItem = async (req,res)=>{
+    try {
+        const item = Item.findById(req.params.id)
+
+        if(!item){
+            return res.status(404).json({message:"Not found"})
+        }
+    } catch (err) {
+        
+    }
+}
+
+
+  exports.deleteItem = async(req,res)=>{
+    if(!ObjectID.isValid){
+        return res.status(404).send({message:"Invalid id"});
+    }
+      try {
+        const item = await Item.findById(req.params.id)
+        if(!item){
+            return res.status(404).send({message:"Item not found"})
+        }
+
+          await item.deleteOne()
+          res.json({message: "Item deleted successfully"})
+      } catch (err) {
+          res.status(400).json(err)
+      }
+  }

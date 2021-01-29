@@ -14,5 +14,8 @@ router
 router
     .route('/:id')    
     .get(itemController.getSingleItem)
+    // .all(onlyAuthenticate,onlyAdmin)
+    .patch(itemController.updateItem)
+    .delete(itemController.deleteItem)
 
 module.exports = router;    
