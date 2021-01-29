@@ -45,7 +45,10 @@ const populateItems = async ()=>{
 
 const populateUsers = async ()=>{
     await user.deleteMany()
-    await user.insertMany(seedUser)
+    // await user.insertMany(seedUser)
+    await new user(seedUser[0]).save();
+    await new user(seedUser[1]).save();
+    
 }
 
 module.exports = { seedItems, populateItems, seedUser,populateUsers};

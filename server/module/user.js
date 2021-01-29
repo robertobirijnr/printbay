@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
 const config = require('../config/db')
+const bcrypt = require("bcryptjs")
 
 const userSchema = new Schema({
     name:{
@@ -57,5 +58,18 @@ userSchema.statics.findByToken = async function(token){
         throw err
     }
 }
+
+userSchema.pre("save", async function(next){
+    if(this.isModified("password")){
+        try {
+            this.password = await bcrypt.hash(this.password,10)
+            next()
+        } catch (err) {
+            next(err)
+        }
+    }else{
+        next()
+    }
+})
 
 module.exports = mongoose.model('user',userSchema)
