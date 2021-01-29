@@ -41,6 +41,9 @@ const userSchema = new Schema({
 });
 
 userSchema.methods.generateAuthToken = async function(){
+    if(this.token){
+        return this.token
+    }
     const token = jwt.sign(
         {_id: this._id.toHexString()},
         config.JWT_SECRETE
@@ -71,5 +74,30 @@ userSchema.pre("save", async function(next){
         next()
     }
 })
+
+userSchema.statics.findByCredentials = async function(email,password){
+    const user = await this.findOne({email})
+    if(!user){
+        throw{
+            errors:{
+                email:{
+                    message:"User not found"
+                }
+            }
+        }
+    }else{
+       if(await bcrypt.compare(password,user.password)){
+        return user
+       }else{
+        throw{
+            errors:{
+                email:{
+                    message:"Incorrect email or password"
+                }
+            }
+        }
+       }
+    }
+}
 
 module.exports = mongoose.model('user',userSchema)

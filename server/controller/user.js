@@ -9,7 +9,20 @@ exports.registerUser = async(req,res)=>{
         const token = await doc.generateAuthToken();
         res
         .header("authorization",`Bearer ${token}`)
-        .json({user: doc})
+        .send({user: doc})
+    } catch (err) {
+        res.status(400).send(err)
+    }
+}
+
+exports.login = async(req,res)=>{
+    const {email, password} = req.body;
+    try {
+        const user = await User.findByCredentials(email,password);
+        const token = await user.generateAuthToken();
+        res
+        .header("authorization",`Bearer ${token}`)
+        .send({user})
     } catch (err) {
         res.status(400).send(err)
     }
