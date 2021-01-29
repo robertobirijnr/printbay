@@ -2,7 +2,7 @@ const expect = require('expect');
 const app = require('../../../server')
 const Item = require('../../../server/module/items')
 const request = require('supertest')
-const {seedItems,populateItems} = require("./seedItems");
+const {seedItems,populateItems, seedUser} = require("./seedItems");
 const {ObjectID} = require("mongodb")
 
 // const add = (x,y) => x + y;
@@ -24,6 +24,7 @@ describe("POST /items", ()=>{
         const body = { title:"test title"}
         const res = await request(app)
         .post('/api/items')
+        .set('authorization',`Bearer ${seedUser[0].token}`)
         .send(body)
         .expect(200);
     expect(res.body.item.title).toBe(body.title);
@@ -36,6 +37,7 @@ describe("POST /items", ()=>{
     it("should not create a new item with invalid data", async ()=>{
         await request(app)
         .post('/api/items')
+        .set('authorization',`Bearer ${seedUser[0].token}`)
         .send({})
         .expect(400);
         const item = await Item.find();

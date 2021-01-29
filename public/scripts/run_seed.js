@@ -24,8 +24,7 @@ class DB{
         await this.users.forEach(async user =>{
             await (new User(user).save(()=>{}))
         })
-
-        console.log('Database Populated!');
+        
     }
 
     async seedDB(){
@@ -44,8 +43,7 @@ mongoose.connect(config.DB_URI_LOCAL, { useNewUrlParser: true ,useUnifiedTopolog
   .then(async() => {
       const db = new DB();
       await db.seedDB();
-      process.exit(0)
+      console.log('you can cloose connection now')
   })
   .catch(err => console.log(err));
-  
 
