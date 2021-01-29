@@ -3,7 +3,7 @@ module.exports = function(req,res,next){
         next()
     }else{
         return res
-        .set(403)
-        .send({message:"Only admin users can take this action"})
+                .status(403)
+                .send({message:"Only admin users can take this action"})
     }
 }

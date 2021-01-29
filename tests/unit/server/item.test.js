@@ -42,6 +42,22 @@ describe("POST /items", ()=>{
         .expect(400);
         const item = await Item.find();
         expect(item.length).toBe(seedItems.length);
+    });
+    it("should not create an item without authorization header ", async ()=>{
+        await request(app)
+        .post('/api/items')
+        .expect(401)
+    });
+
+    it("should not be able to create item if not admin", async()=>{
+         const result = await request(app)
+        .post('/api/users/login')
+        .send(seedUser[1])
+        .expect(200);
+        await request(app)
+        .post('/api/items')
+        .set("authorization",result.headers.authorization)
+        .expect(403)
     })
 })
 
